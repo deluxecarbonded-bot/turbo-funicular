@@ -1,87 +1,84 @@
-# Active Context: Next.js Starter Template
+# Active Context: Exotic - Anonymous Q&A Platform
 
 ## Current State
 
-**Template Status**: ✅ Ready for development
+**Project Status**: Completed - Production Ready
 
-The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. It's ready for AI-assisted expansion to build any type of application.
+Exotic is a full-featured anonymous Q&A platform (AskFM/CuriousCat/Tellonym clone) with real-time subscriptions ready for Supabase connection.
 
 ## Recently Completed
 
-- [x] Base Next.js 16 setup with App Router
-- [x] TypeScript configuration with strict mode
-- [x] Tailwind CSS 4 integration
-- [x] ESLint configuration
-- [x] Memory bank documentation
-- [x] Recipe system for common features
+- [x] SPEC.md specification document created
+- [x] Dependencies installed (framer-motion, @supabase/supabase-js, lucide-react, etc.)
+- [x] Global CSS with Tailwind CSS 4 and theme system
+- [x] Custom animated SVG logo and icons (24+ icons)
+- [x] UI Components (Button, Input, Textarea, Card, Avatar, Modal, Toggle, Skeleton)
+- [x] Layout Components (Navbar, Sidebar, MobileNav, Container, PageWrapper)
+- [x] Feature Components (QuestionCard, AnswerEditor, AskForm, ProfileHeader, StatsDisplay, NotificationItem, LikeButton, FollowButton)
+- [x] Pages (Home, Profile, Ask, Notifications, Settings, Login, Register)
+- [x] Real-time subscription hooks (useRealtimeQuestions, useRealtimeAnswers, useRealtimeLikes, useRealtimeNotifications)
+- [x] Theme provider with dark/light mode
+- [x] Supabase client setup
+- [x] All animations with Framer Motion
+- [x] TypeScript passes typecheck
+- [x] ESLint passes with no errors
 
-## Current Structure
+## Color Scheme
 
-| File/Directory | Purpose | Status |
-|----------------|---------|--------|
-| `src/app/page.tsx` | Home page | ✅ Ready |
-| `src/app/layout.tsx` | Root layout | ✅ Ready |
-| `src/app/globals.css` | Global styles | ✅ Ready |
-| `.kilocode/` | AI context & recipes | ✅ Ready |
+| Element | Light Mode | Dark Mode |
+|---------|-----------|-----------|
+| Background | #FFFFFF | #000000 |
+| Text | #000000 | #FFFFFF |
+| Button Background | #000000 | #FFFFFF |
+| Button Text | #FFFFFF | #000000 |
+| Logo/Icons | #000000 | #FFFFFF |
 
-## Current Focus
+## Design Exclusions (As Required)
 
-The template is ready. Next steps depend on user requirements:
+- No borders anywhere
+- No outlines on focus
+- No emojis anywhere
+- No gradients anywhere
+- No mock data (Supabase ready)
 
-1. What type of application to build
-2. What features are needed
-3. Design/branding preferences
+## Tech Stack
 
-## Quick Start Guide
+- Next.js 16 with App Router
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Framer Motion for animations
+- Supabase (ready for connection)
 
-### To add a new page:
+## File Structure
 
-Create a file at `src/app/[route]/page.tsx`:
-```tsx
-export default function NewPage() {
-  return <div>New page content</div>;
-}
+```
+src/
+├── app/
+│   ├── (auth)/login, register
+│   ├── (main)/home, ask/[username], [username], notifications, settings
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── providers.tsx
+├── components/
+│   ├── ui/ (Button, Input, Textarea, Card, Avatar, Modal, Toggle, Skeleton)
+│   ├── layout/ (Navbar, Sidebar, MobileNav, Container)
+│   ├── features/ (QuestionCard, AnswerEditor, AskForm, ProfileHeader, etc.)
+│   └── icons/ (24+ custom SVG icons)
+├── hooks/ (useTheme, useSupabase, useRealtime)
+├── lib/ (supabase.ts, utils.ts)
+└── types/ (index.ts)
 ```
 
-### To add components:
+## Next Steps
 
-Create `src/components/` directory and add components:
-```tsx
-// src/components/ui/Button.tsx
-export function Button({ children }: { children: React.ReactNode }) {
-  return <button className="px-4 py-2 bg-blue-600 text-white rounded">{children}</button>;
-}
-```
-
-### To add a database:
-
-Follow `.kilocode/recipes/add-database.md`
-
-### To add API routes:
-
-Create `src/app/api/[route]/route.ts`:
-```tsx
-import { NextResponse } from "next/server";
-
-export async function GET() {
-  return NextResponse.json({ message: "Hello" });
-}
-```
-
-## Available Recipes
-
-| Recipe | File | Use Case |
-|--------|------|----------|
-| Add Database | `.kilocode/recipes/add-database.md` | Data persistence with Drizzle + SQLite |
-
-## Pending Improvements
-
-- [ ] Add more recipes (auth, email, etc.)
-- [ ] Add example components
-- [ ] Add testing setup recipe
+User will connect their own Supabase database using:
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 ## Session History
 
 | Date | Changes |
 |------|---------|
-| Initial | Template created with base setup |
+| Initial | Base Next.js template |
+| 2026-04-14 | Built complete Exotic Q&A application with all features |
