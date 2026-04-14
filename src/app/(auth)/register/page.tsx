@@ -9,9 +9,11 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Logo, ArrowLeftIcon } from "@/components/icons";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { signUp } = useAuth();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,14 +37,14 @@ export default function RegisterPage() {
 
     setIsLoading(true);
 
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+    const { error: authError } = await signUp(email, password, username);
+    
+    if (authError) {
+      setError(authError.message);
+    } else {
       router.push("/");
-    } catch (err) {
-      setError("Registration failed");
-    } finally {
-      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   return (

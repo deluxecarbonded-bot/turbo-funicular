@@ -9,9 +9,11 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Logo, ArrowLeftIcon } from "@/components/icons";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -22,14 +24,14 @@ export default function LoginPage() {
     setError("");
     setIsLoading(true);
 
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+    const { error: authError } = await signIn(email, password);
+    
+    if (authError) {
+      setError(authError.message);
+    } else {
       router.push("/");
-    } catch (err) {
-      setError("Invalid credentials");
-    } finally {
-      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   return (
