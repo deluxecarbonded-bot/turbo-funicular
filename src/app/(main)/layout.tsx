@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { Container } from "@/components/layout/Container";
 
 export default function MainLayout({
   children,
@@ -14,22 +15,25 @@ export default function MainLayout({
     <div className="min-h-screen bg-[var(--background)]">
       <Navbar />
       
-      <div className="hidden lg:block">
+      <div className="hidden lg:flex fixed left-0 top-0 bottom-0 z-30">
         <Sidebar />
       </div>
       
-      <main className="lg:ml-72 pt-16 pb-24 lg:pb-4">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={typeof window !== "undefined" ? window.location.pathname : "/"}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
-          >
-            {children}
-          </motion.div>
-        </AnimatePresence>
+      <main className="lg:ml-72 pt-16 pb-20 lg:pb-4">
+        <Container size="xl">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={typeof window !== "undefined" ? window.location.pathname : "/"}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="py-4 lg:py-6"
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
+        </Container>
       </main>
       
       <MobileNav />

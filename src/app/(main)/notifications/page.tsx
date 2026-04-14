@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Container, PageWrapper } from "@/components/layout/Container";
 import { NotificationItem } from "@/components/features/NotificationItem";
 import { Card } from "@/components/ui/Card";
 import { supabase } from "@/lib/supabase";
@@ -52,62 +51,54 @@ export default function NotificationsPage() {
 
   if (loading) {
     return (
-      <PageWrapper>
-        <Container>
-          <div className="space-y-4 py-6">
-            <Skeleton className="h-10 w-40" />
-            <Skeleton className="h-24" />
-            <Skeleton className="h-24" />
-          </div>
-        </Container>
-      </PageWrapper>
+      <div className="space-y-4">
+        <Skeleton className="h-10 w-40" />
+        <Skeleton className="h-24" />
+        <Skeleton className="h-24" />
+      </div>
     );
   }
 
   return (
-    <PageWrapper>
-      <Container>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-4 py-6"
-        >
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-[var(--foreground)]">
-              Notifications
-            </h1>
-            {unreadCount > 0 && (
-              <span className="px-3 py-1 bg-[var(--primary)] text-[var(--button-text)] text-sm rounded-full">
-                {unreadCount} new
-              </span>
-            )}
-          </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-4"
+    >
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl sm:text-2xl font-bold text-[var(--foreground)]">
+          Notifications
+        </h1>
+        {unreadCount > 0 && (
+          <span className="px-3 py-1 bg-[var(--foreground)] text-[var(--background)] text-sm rounded-full font-medium">
+            {unreadCount} new
+          </span>
+        )}
+      </div>
 
-          <Card>
-            <div className="divide-y divide-[var(--border)]">
-              {notifications.length > 0 ? (
-                notifications.map((notification, index) => (
-                  <motion.div
-                    key={notification.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                  >
-                    <NotificationItem 
-                      notification={notification} 
-                      onMarkAsRead={handleMarkAsRead}
-                    />
-                  </motion.div>
-                ))
-              ) : (
-                <div className="p-8 text-center text-[var(--accent)]">
-                  No notifications yet
-                </div>
-              )}
+      <Card>
+        <div className="divide-y divide-[var(--border)]">
+          {notifications.length > 0 ? (
+            notifications.map((notification, index) => (
+              <motion.div
+                key={notification.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <NotificationItem 
+                  notification={notification} 
+                  onMarkAsRead={handleMarkAsRead}
+                />
+              </motion.div>
+            ))
+          ) : (
+            <div className="p-6 sm:p-8 text-center text-[var(--accent)]">
+              No notifications yet
             </div>
-          </Card>
-        </motion.div>
-      </Container>
-    </PageWrapper>
+          )}
+        </div>
+      </Card>
+    </motion.div>
   );
 }

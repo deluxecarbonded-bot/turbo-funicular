@@ -2,7 +2,6 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Container, PageWrapper } from "@/components/layout/Container";
 import { AskForm } from "@/components/features/AskForm";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
@@ -40,16 +39,12 @@ export default function AskPage() {
   };
 
   return (
-    <PageWrapper>
-      <Container size="sm">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="py-8"
-        >
-          <AskForm toUsername={username} onSubmit={handleSubmit} />
-        </motion.div>
-      </Container>
-    </PageWrapper>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="py-6"
+    >
+      <AskForm toUsername={username} onSubmit={handleSubmit} />
+    </motion.div>
   );
 }
