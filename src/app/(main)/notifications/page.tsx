@@ -1,51 +1,68 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Container, PageWrapper } from "@/components/layout/Container";
 import { NotificationItem } from "@/components/features/NotificationItem";
 import { Card } from "@/components/ui/Card";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthContext";
 import type { Notification } from "@/types";
-
-const mockNotifications: Notification[] = [
-  {
-    id: "1",
-    user_id: "1",
-    type: "new_question",
-    data: {
-      from_username: "curious_one",
-      from_user_id: "2",
-    },
-    is_read: false,
-    created_at: new Date(Date.now() - 1800000).toISOString(),
-  },
-  {
-    id: "2",
-    user_id: "1",
-    type: "new_like",
-    data: {
-      from_username: "fan123",
-      from_user_id: "3",
-      question_id: "1",
-    },
-    is_read: false,
-    created_at: new Date(Date.now() - 3600000).toISOString(),
-  },
-  {
-    id: "3",
-    user_id: "1",
-    type: "new_answer",
-    data: {
-      from_username: "question_asker",
-      from_user_id: "4",
-      question_id: "2",
-    },
-    is_read: true,
-    created_at: new Date(Date.now() - 86400000).toISOString(),
-  },
-];
+import { Skeleton } from "@/components/ui/Skeleton";
 
 export default function NotificationsPage() {
-  const unreadCount = mockNotifications.filter(n => !n.is_read).length;
+  const router = useRouter();
+  const { user } = useAuth();
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchNotifications() {
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+
+      const { data } = await supabase
+        .from("notifications")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      setNotifications(data || []);
+      setLoading(false);
+    }
+
+    fetchNotifications();
+  }, [user, router]);
+
+  const unreadCount = notifications.filter(n => !n.is_read).length;
+
+  const handleMarkAsRead = async (id: string) => {
+    await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("id", id);
+
+    setNotifications(prev => 
+      prev.map(n => n.id === id ? { ...n, is_read: true } : n)
+    );
+  };
+
+  if (loading) {
+    return (
+      <PageWrapper>
+        <Container>
+          <div className="space-y-4 py-6">
+            <Skeleton className="h-10 w-40" />
+            <Skeleton className="h-24" />
+            <Skeleton className="h-24" />
+          </div>
+        </Container>
+      </PageWrapper>
+    );
+  }
 
   return (
     <PageWrapper>
@@ -68,15 +85,18 @@ export default function NotificationsPage() {
 
           <Card>
             <div className="divide-y divide-[var(--border)]">
-              {mockNotifications.length > 0 ? (
-                mockNotifications.map((notification, index) => (
+              {notifications.length > 0 ? (
+                notifications.map((notification, index) => (
                   <motion.div
                     key={notification.id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
                   >
-                    <NotificationItem notification={notification} />
+                    <NotificationItem 
+                      notification={notification} 
+                      onMarkAsRead={handleMarkAsRead}
+                    />
                   </motion.div>
                 ))
               ) : (

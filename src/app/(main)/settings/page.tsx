@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Container, PageWrapper } from "@/components/layout/Container";
 import { Card } from "@/components/ui/Card";
@@ -9,24 +10,88 @@ import { Textarea } from "@/components/ui/Textarea";
 import { Button } from "@/components/ui/Button";
 import { Toggle } from "@/components/ui/Toggle";
 import { Avatar } from "@/components/ui/Avatar";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { useTheme } from "@/hooks/useTheme";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthContext";
 import { ArrowLeftIcon, LinkIcon } from "@/components/icons";
 import Link from "next/link";
 
 export default function SettingsPage() {
+  const router = useRouter();
   const { isDarkMode, toggleTheme } = useTheme();
-  const [username, setUsername] = useState("demo");
-  const [displayName, setDisplayName] = useState("Demo User");
-  const [bio, setBio] = useState("Welcome to my Exotic profile!");
-  const [website, setWebsite] = useState("https://example.com");
+  const { user, signOut } = useAuth();
+  const [username, setUsername] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [bio, setBio] = useState("");
+  const [website, setWebsite] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadProfile() {
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
+      if (data) {
+        setUsername(data.username);
+        setDisplayName(data.display_name);
+        setBio(data.bio || "");
+        setWebsite(data.website || "");
+        setIsPublic(data.is_public ?? true);
+      }
+      setLoading(false);
+    }
+
+    loadProfile();
+  }, [user, router]);
 
   const handleSave = async () => {
+    if (!user) return;
     setIsSaving(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        username,
+        display_name: displayName,
+        bio,
+        website,
+        is_public: isPublic,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", user.id);
+
     setIsSaving(false);
   };
+
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+    await signOut();
+    router.push("/");
+  };
+
+  if (loading) {
+    return (
+      <PageWrapper>
+        <Container size="sm">
+          <div className="space-y-6 py-6">
+            <Skeleton className="h-10 w-40" />
+            <Skeleton className="h-64" />
+          </div>
+        </Container>
+      </PageWrapper>
+    );
+  }
 
   return (
     <PageWrapper>

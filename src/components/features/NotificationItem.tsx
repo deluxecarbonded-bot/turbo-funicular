@@ -10,6 +10,7 @@ import type { Notification } from "@/types";
 interface NotificationItemProps {
   notification: Notification;
   onClick?: () => void;
+  onMarkAsRead?: (id: string) => void;
 }
 
 const notificationIcons = {
@@ -26,9 +27,16 @@ const notificationMessages = {
   new_follower: "started following you",
 };
 
-export function NotificationItem({ notification, onClick }: NotificationItemProps) {
+export function NotificationItem({ notification, onClick, onMarkAsRead }: NotificationItemProps) {
   const Icon = notificationIcons[notification.type] || AskIcon;
   const message = notificationMessages[notification.type] || "";
+
+  const handleClick = () => {
+    if (!notification.is_read && onMarkAsRead) {
+      onMarkAsRead(notification.id);
+    }
+    if (onClick) onClick();
+  };
 
   return (
     <motion.div
@@ -39,7 +47,7 @@ export function NotificationItem({ notification, onClick }: NotificationItemProp
         "flex items-start gap-3 p-4 transition-colors cursor-pointer",
         !notification.is_read && "bg-[var(--muted)]/50"
       )}
-      onClick={onClick}
+      onClick={handleClick}
     >
       <Avatar
         src={null}
