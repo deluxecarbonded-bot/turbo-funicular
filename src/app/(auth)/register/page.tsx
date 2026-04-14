@@ -34,11 +34,6 @@ export default function RegisterPage() {
       return;
     }
 
-    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-      setError("Username can only contain letters, numbers, and underscores");
-      return;
-    }
-
     setIsLoading(true);
 
     const { error: authError } = await signUp(email, password, username);
@@ -52,7 +47,11 @@ export default function RegisterPage() {
   };
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="w-full max-w-sm"
+    >
       <Link href="/" className="absolute top-4 left-4">
         <motion.button
           className="p-2 hover:bg-[var(--muted)] rounded-full transition-colors"
@@ -65,12 +64,12 @@ export default function RegisterPage() {
 
       <div className="flex justify-center mb-6">
         <div className="w-12 h-12 rounded-2xl bg-[var(--foreground)] flex items-center justify-center">
-          <AskIcon size={28} className="text-[var(--background)]" />
+          <AskIcon size={26} className="text-[var(--background)]" />
         </div>
       </div>
 
-      <Card className="p-6 sm:p-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)] text-center mb-2">
+      <Card className="p-6">
+        <h1 className="text-2xl font-bold text-[var(--foreground)] text-center mb-1">
           Create account
         </h1>
         <p className="text-[var(--accent)] text-center mb-6">
@@ -115,7 +114,7 @@ export default function RegisterPage() {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-red-500 text-sm"
+              className="text-sm text-red-500"
             >
               {error}
             </motion.p>
@@ -133,6 +132,6 @@ export default function RegisterPage() {
           </Link>
         </p>
       </Card>
-    </>
+    </motion.div>
   );
 }

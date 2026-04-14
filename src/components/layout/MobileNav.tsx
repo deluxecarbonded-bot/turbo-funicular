@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { HomeIcon, NotificationsIcon, SettingsIcon, ProfileIcon, AskIcon, SendIcon } from "@/components/icons";
+import { HomeIcon, NotificationsIcon, SettingsIcon, ProfileIcon, AskIcon } from "@/components/icons";
 import { useAuth } from "@/contexts/AuthContext";
 
 export function MobileNav() {
@@ -13,32 +13,30 @@ export function MobileNav() {
   const { user } = useAuth();
   const [fabOpen, setFabOpen] = useState(false);
 
-  const navItems = [
-    { href: "/", icon: HomeIcon, label: "Home" },
-    { href: "/notifications", icon: NotificationsIcon, label: "Notifications" },
-    { href: "/settings", icon: SettingsIcon, label: "Settings" },
+  const navLinks = [
+    { href: "/", label: "Home", icon: HomeIcon },
+    { href: "/notifications", label: "Notifications", icon: NotificationsIcon },
+    { href: "/settings", label: "Settings", icon: SettingsIcon },
   ];
 
   return (
     <>
       <nav className="fixed bottom-4 left-4 right-4 z-50 lg:hidden">
-        <div className="flex items-center justify-between h-14 px-4 bg-[var(--background)]/90 backdrop-blur-xl rounded-2xl border border-[var(--border)] shadow-lg">
+        <div className="flex items-center justify-between h-12 px-3 bg-[var(--background)]/95 backdrop-blur-lg rounded-2xl border border-[var(--border)] shadow-lg">
           {user ? (
             <>
-              <div className="flex items-center gap-1">
-                {navItems.map((item) => (
-                  <Link key={item.href} href={item.href}>
+              <div className="flex items-center gap-0.5">
+                {navLinks.map((link) => (
+                  <Link key={link.href} href={link.href}>
                     <motion.div
                       className={cn(
-                        "p-3 rounded-xl transition-colors",
-                        pathname === item.href
-                          ? "bg-[var(--muted)]"
-                          : "hover:bg-[var(--muted)]"
+                        "p-2.5 rounded-xl transition-colors",
+                        pathname === link.href ? "bg-[var(--muted)]" : "hover:bg-[var(--muted)]"
                       )}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                     >
-                      <item.icon size={22} />
+                      <link.icon size={20} />
                     </motion.div>
                   </Link>
                 ))}
@@ -47,21 +45,19 @@ export function MobileNav() {
                 <motion.div
                   className={cn(
                     "p-1.5 rounded-xl transition-colors",
-                    pathname === `/${user?.email?.split('@')[0]}`
-                      ? "bg-[var(--muted)]"
-                      : "hover:bg-[var(--muted)]"
+                    pathname === `/${user?.email?.split('@')[0]}` ? "bg-[var(--muted)]" : "hover:bg-[var(--muted)]"
                   )}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                 >
-                  <ProfileIcon size={22} />
+                  <ProfileIcon size={20} />
                 </motion.div>
               </Link>
             </>
           ) : (
             <Link href="/login" className="w-full">
               <motion.div
-                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-[var(--button-bg)] text-[var(--button-text)] rounded-xl font-medium"
+                className="flex items-center justify-center w-full px-3 py-2 bg-[var(--button-bg)] text-[var(--button-text)] rounded-xl text-sm font-medium"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -100,12 +96,12 @@ export function MobileNav() {
 
       {user && (
         <motion.button
-          className="fixed bottom-20 right-4 z-50 lg:hidden w-14 h-14 bg-[var(--primary)] rounded-full flex items-center justify-center shadow-lg"
+          className="fixed bottom-20 right-4 z-50 lg:hidden w-12 h-12 bg-[var(--foreground)] rounded-full flex items-center justify-center shadow-lg"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setFabOpen(!fabOpen)}
         >
-          <SendIcon size={24} className="text-[var(--button-text)]" />
+          <AskIcon size={22} className="text-[var(--background)]" />
         </motion.button>
       )}
     </>

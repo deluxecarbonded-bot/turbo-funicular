@@ -3,41 +3,32 @@
 import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  error?: string;
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
+  error?: string;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, error, label, id, ...props }, ref) => {
-    const inputId = id || label?.toLowerCase().replace(/\s+/g, "-");
-    
+  ({ className, label, error, type = "text", ...props }, ref) => {
     return (
-      <div className="w-full">
+      <div className="space-y-1.5">
         {label && (
-          <label
-            htmlFor={inputId}
-            className="block text-sm font-medium mb-2 text-[var(--foreground)]"
-          >
+          <label className="text-sm font-medium text-[var(--foreground)]">
             {label}
           </label>
         )}
         <input
-          ref={ref}
           type={type}
-          id={inputId}
+          ref={ref}
           className={cn(
-            "flex h-10 w-full rounded-md px-3 py-2 text-sm bg-[var(--input)] text-[var(--foreground)] placeholder:text-[var(--accent)] transition-all duration-200",
-            "focus:outline-none",
-            error && "ring-2 ring-red-500",
+            "w-full rounded-xl bg-[var(--input)] border border-[var(--border)] px-4 py-2.5 text-[var(--foreground)] placeholder:text-[var(--accent)] focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--muted)] transition-all",
+            error && "border-red-500 focus:border-red-500 focus:ring-red-500/20",
             className
           )}
           {...props}
         />
         {error && (
-          <p className="mt-1 text-xs text-red-500">
-            {error}
-          </p>
+          <p className="text-sm text-red-500">{error}</p>
         )}
       </div>
     );
